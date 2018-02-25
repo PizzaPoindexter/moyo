@@ -1,31 +1,21 @@
+#include <iostream>
+#include <string>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
 #include "pulse.h"
-#include "pulse.cpp"
+#include "twilio.hh"
 
 int safeArr[2];
-
-// int heartRate()
-// {
-//   int rate=0;
-//   int chance=rand()%16;
-//   if(chance==0)
-//     rate=30;
-//   if((chance==1)||(chance==2))
-//     rate=45;
-//   if((chance==3)||(chance==4))
-//     rate=50;
-//   if(chance==5)
-//     rate=55;
-//   if((chance==6)||(chance==7))
-//     rate=65;
-//   if((chance==8)||(chance==9))
-//     rate=70;
-//   if((chance==10)||(chance==11)||(chance==12))
-//     rate=75;
-//   if((chance==13)||(chance==14)||(chance==15))
-//     rate=80;
-//
-//   return rate;
-// }
+//SMS constants
+  std::string account_sid = "AC34283f94a50748a6d05dd79b209a7b1e";
+  std::string auth_token = "8c2f0ce34c308e17d5e24ceb083be6b1";
+  std::string message = "Your friend Jay has registered you as an emergency contact and their heart rate has dropped below a healthy level. You should attempt to contact them or emergency services";
+  std::string from_number = "+18304200760";
+  std::string to_number = "+12102517291";
+  std::string response;
 
 int heartRate()
 {
@@ -39,6 +29,15 @@ int heartRate()
     rate=rand()%(80-60+1)+60;
 
   return rate;
+}
+
+void sendAlert(){
+	twilio::Twilio *twilio = new twilio::Twilio(account_sid, auth_token);
+	bool message_result = twilio->send_message(
+		to_number,
+		from_number,
+		message,
+		response);
 }
 
 void addBpmTest()
@@ -70,7 +69,8 @@ int checks(pulse p,int x)
   if(x==2)
   {
     cout<<"Severe low pulse detected. Contacting dispatch center\n\n";
-    // Sleep(1000);
+	sendAlert();
+	// Sleep(1000);
     x=0;
     p.bpmArr[0]=80;
     p.bpmArr[1]=80;
@@ -81,6 +81,7 @@ int checks(pulse p,int x)
 
 int main()
 {
+  
   srand(time(0));
 
   pulse p(80);
@@ -115,7 +116,7 @@ int main()
 
     int v=checks(p,x);
 
-    Sleep(2500);
+    sleep(2500);
   }
 
 
