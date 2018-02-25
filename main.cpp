@@ -69,7 +69,7 @@ int checks(pulse p,int x)
     cout<<"persistent low pulse detected\n\n";
   if(x==2)
   {
-    cout<<"Severe low pulse detected. Contacting dispatch center\n\n";
+    cout<<"Severe low pulse detected. Contacting dispatch center & ICE contaccts\n\n";
     // Sleep(1000);
     x=0;
     p.bpmArr[0]=80;
@@ -81,6 +81,9 @@ int checks(pulse p,int x)
 
 int main()
 {
+  ofstream file;
+  file.open("moyo.txt");
+
   srand(time(0));
 
   pulse p(80);
@@ -92,11 +95,16 @@ int main()
   {
     int r=heartRate();
     cout<<"\t-~-"<<r<<"-~-"<<endl;
+    file.open("moyo.txt",ios::app);
+    if(file)
+      file<<"\t-~-"<<r<<"-~-\n";
     p.addBpm(r);
 
     int y=p.bpmArr[0];
     int z=p.bpmArr[1];
     int x=p.pulseSafe(y,z);
+
+    file.close();
     // cout<<"bpmArr[0]: "<<p.bpmArr[0]<<endl;
     // cout<<"bpmArr[1]: "<<p.bpmArr[1]<<endl;
 
@@ -140,5 +148,6 @@ int main()
   //
   // cout<<"x: "<<x<<endl;
 
+  // file.close();
   return 0;
 }

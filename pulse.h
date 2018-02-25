@@ -6,6 +6,7 @@
 #include <ctime>
 #include <cstdio>
 #include <windows.h>
+#include <fstream>
 using namespace std;
 
 class pulse
